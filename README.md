@@ -87,7 +87,7 @@ pnpm test:headed   # Headed browser mode
 
 ```bash
 # Clone the theme
-git clone <your-repo-url>
+git clone https://github.com/alancuenca/business-starter
 cd business-starter
 
 # Install dependencies
