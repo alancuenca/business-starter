@@ -1,0 +1,27 @@
+{
+  "name": "business-starter",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed"
+  },
+  "dependencies": {
+    "@fontsource/work-sans": "^5.2.8",
+    "@tailwindcss/forms": "^0.5.11",
+    "@tailwindcss/vite": "^4",
+    "astro": "^5.17.1",
+    "sharp": "^0.34.5",
+    "tailwind-merge": "^3.4.0",
+    "tailwind-variants": "^3.2.2",
+    "tailwindcss": "^4"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.1"
+  }
+}

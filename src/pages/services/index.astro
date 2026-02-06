@@ -1,0 +1,24 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import StickyHeader from '@/components/custom/StickyHeader.astro';
+import ServiceGrid from '@/components/sections/ServiceGrid.astro';
+---
+
+<BaseLayout title="Our Services">
+  <StickyHeader />
+  <main id="main-content" class="pt-20">
+    <!-- Page Header -->
+    <section class="py-16">
+      <div class="section-container text-center reveal">
+        <h1 class="text-4xl md:text-5xl font-black tracking-tight text-foreground mb-4">
+          Professional Home Services
+        </h1>
+        <p class="text-lg text-muted-foreground max-w-xl mx-auto">
+          From emergency repairs to complete renovations, our licensed team has you covered
+        </p>
+      </div>
+    </section>
+
+    <ServiceGrid />
+  </main>
+</BaseLayout>

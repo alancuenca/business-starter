@@ -1,0 +1,319 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Work Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--starwind-accordion-content-height);
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      height: var(--starwind-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-accent: var(--primary-accent);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary-accent: var(--secondary-accent);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-error: var(--error);
+  --color-error-foreground: var(--error-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-outline: var(--outline);
+
+  --radius-xs: calc(var(--radius) - 0.375rem);
+  --radius-sm: calc(var(--radius) - 0.25rem);
+  --radius-md: calc(var(--radius) - 0.125rem);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 0.25rem);
+  --radius-2xl: calc(var(--radius) + 0.5rem);
+  --radius-3xl: calc(var(--radius) + 1rem);
+
+  --color-sidebar: var(--sidebar-background);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-outline: var(--sidebar-outline);
+}
+
+/* ============================================
+   CUSTOMIZE: FixIt Pro Brand Colors
+   Edit these CSS variables to rebrand the theme.
+   ============================================ */
+:root {
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+
+  /* Primary Brand Blue -- brighter, modern */
+  --primary: #137fec;
+  --primary-foreground: #ffffff;
+  --primary-accent: #0b5cbe;
+
+  /* Secondary Action Orange */
+  --secondary: #f59e0b;
+  --secondary-foreground: #000000;
+  --secondary-accent: #d97706;
+
+  /* Muted tones */
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+
+  /* Accent Green */
+  --accent: #10b981;
+  --accent-foreground: #ffffff;
+
+  /* Semantic colors */
+  --info: #38bdf8;
+  --info-foreground: #0c4a6e;
+  --success: #10b981;
+  --success-foreground: #064e3b;
+  --warning: #fbbf24;
+  --warning-foreground: #78350f;
+  --error: #dc2626;
+  --error-foreground: #fef2f2;
+
+  /* Borders & inputs */
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --outline: #94a3b8;
+
+  /* Sharper, professional radius */
+  --radius: 0.5rem;
+
+  /* Subtle section background */
+  --background-light: #f6f7f8;
+
+  /* Sidebar */
+  --sidebar-background: #f8fafc;
+  --sidebar-foreground: #0f172a;
+  --sidebar-primary: #137fec;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f1f5f9;
+  --sidebar-accent-foreground: #1e293b;
+  --sidebar-border: #e2e8f0;
+  --sidebar-outline: #94a3b8;
+}
+
+.dark {
+  --background: #0f172a;
+  --foreground: #f8fafc;
+  --card: #1e293b;
+  --card-foreground: #f8fafc;
+  --popover: #1e293b;
+  --popover-foreground: #f8fafc;
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+  --primary-accent: #60a5fa;
+  --secondary: #f59e0b;
+  --secondary-foreground: #000000;
+  --secondary-accent: #fbbf24;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --accent: #10b981;
+  --accent-foreground: #ffffff;
+  --info: #38bdf8;
+  --info-foreground: #0c4a6e;
+  --success: #34d399;
+  --success-foreground: #064e3b;
+  --warning: #fbbf24;
+  --warning-foreground: #78350f;
+  --error: #f87171;
+  --error-foreground: #fef2f2;
+  --border: rgba(248, 250, 252, 0.1);
+  --input: rgba(248, 250, 252, 0.15);
+  --outline: #64748b;
+
+  --sidebar-background: #1e293b;
+  --sidebar-foreground: #f8fafc;
+  --sidebar-primary: #3b82f6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #334155;
+  --sidebar-accent-foreground: #e2e8f0;
+  --sidebar-border: #334155;
+  --sidebar-outline: #64748b;
+}
+
+/* ============================================
+   Base Layer
+   ============================================ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  * {
+    @apply border-border outline-outline/50;
+  }
+
+  body {
+    @apply bg-background text-foreground scheme-light dark:scheme-dark font-sans antialiased;
+  }
+
+  button {
+    @apply cursor-pointer;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight text-balance;
+  }
+
+  /* Focus-visible ring -- accessible keyboard focus */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary rounded-sm;
+  }
+
+  /* Remove default focus for mouse users */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+/* ============================================
+   Skip Navigation -- Accessibility
+   ============================================ */
+.skip-nav {
+  @apply absolute -top-full left-4 z-100 bg-primary text-primary-foreground
+         px-4 py-2 rounded-b-lg text-sm font-semibold
+         focus:top-0 transition-all;
+}
+
+/* ============================================
+   CUSTOMIZE: Reusable Component Utilities
+   These @apply classes keep templates clean.
+   ============================================ */
+
+/* Section container -- max-width + centered */
+.section-container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-10;
+}
+
+/* Section heading pattern */
+.section-heading {
+  @apply text-3xl md:text-4xl font-black tracking-tight text-foreground;
+}
+
+.section-subheading {
+  @apply text-base md:text-lg text-muted-foreground mt-2;
+}
+
+/* CTA button styles */
+.cta-primary {
+  @apply inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground
+         px-6 py-3 rounded-lg font-semibold text-sm
+         hover:bg-primary-accent focus-visible:ring-2 focus-visible:ring-primary/50
+         active:scale-[0.98] transition-all duration-150;
+}
+
+.cta-ghost {
+  @apply inline-flex items-center justify-center gap-2 bg-white/10 text-white
+         border border-white/20 px-6 py-3 rounded-lg font-semibold text-sm
+         hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-white/50
+         active:scale-[0.98] transition-all duration-150;
+}
+
+/* Secondary outline CTA */
+.cta-outline {
+  @apply inline-flex items-center justify-center gap-2 border border-border bg-background
+         text-foreground px-6 py-3 rounded-lg font-semibold text-sm
+         hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary/50
+         active:scale-[0.98] transition-all duration-150;
+}
+
+/* Trust badge */
+.trust-badge {
+  @apply inline-flex items-center gap-2 px-3 py-1.5
+         bg-primary/10 text-primary rounded-full text-xs font-semibold tracking-wide;
+}
+
+/* Card hover pattern */
+.card-hover {
+  @apply rounded-xl border border-border bg-card p-6
+         shadow-sm hover:shadow-lg hover:border-primary/30
+         transition-all duration-300 ease-out;
+}
+
+/* ============================================
+   CSS-Only Reveal Animations
+   Elements with .reveal fade+slide in when
+   they enter the viewport via IntersectionObserver.
+   Falls back to visible for no-JS.
+   ============================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger children -- add delay per child */
+.reveal-stagger > .reveal:nth-child(1) { transition-delay: 0ms; }
+.reveal-stagger > .reveal:nth-child(2) { transition-delay: 80ms; }
+.reveal-stagger > .reveal:nth-child(3) { transition-delay: 160ms; }
+.reveal-stagger > .reveal:nth-child(4) { transition-delay: 240ms; }
+.reveal-stagger > .reveal:nth-child(5) { transition-delay: 320ms; }
+.reveal-stagger > .reveal:nth-child(6) { transition-delay: 400ms; }
+
+/* No-JS fallback: show everything */
+html:not(.js) .reveal {
+  opacity: 1;
+  transform: none;
+}

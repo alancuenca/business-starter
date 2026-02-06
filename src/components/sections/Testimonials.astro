@@ -1,0 +1,60 @@
+---
+import { getCollection } from 'astro:content';
+
+const reviews = await getCollection('reviews');
+const featuredReviews = reviews.filter(r => r.data.featured).slice(0, 3);
+---
+
+{featuredReviews.length > 0 && (
+<!-- CUSTOMIZE: Customer testimonials section -->
+<section class="py-24" aria-labelledby="testimonials-heading">
+  <div class="section-container">
+    <!-- Section Header -->
+    <div class="text-center mb-14 reveal">
+      <h2 id="testimonials-heading" class="section-heading">What Our Customers Say</h2>
+      <p class="section-subheading">Verified reviews from homeowners we've worked with</p>
+    </div>
+
+    <!-- Reviews Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto reveal-stagger">
+      {featuredReviews.map(review => (
+        <div class="card-hover flex flex-col reveal">
+          {/* Star Rating */}
+          <div class="flex gap-0.5 mb-5" role="img" aria-label={`Rated ${review.data.rating} out of 5 stars`}>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <svg
+                class={`w-5 h-5 ${i < review.data.rating ? 'text-secondary fill-current' : 'text-muted fill-current'}`}
+                viewBox="0 0 20 20"
+                aria-hidden="true"
+              >
+                <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+              </svg>
+            ))}
+          </div>
+
+          {/* Review Text */}
+          <blockquote class="flex-1">
+            <p class="text-sm text-muted-foreground leading-relaxed">
+              "{review.data.review}"
+            </p>
+          </blockquote>
+
+          {/* Reviewer Info */}
+          <div class="flex items-center gap-3 pt-5 mt-5 border-t border-border">
+            <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-sm font-bold text-primary" aria-hidden="true">
+              {review.data.avatar || review.data.name.charAt(0)}
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-foreground">{review.data.name}</p>
+              <p class="text-xs text-muted-foreground">
+                {review.data.service}
+                {review.data.location && ` \u2022 ${review.data.location}`}
+              </p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+)}

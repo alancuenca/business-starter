@@ -1,0 +1,130 @@
+---
+import { getCollection } from 'astro:content';
+import { siteConfig } from '@/site.config';
+
+const reviews = await getCollection('reviews');
+const featuredReview = reviews.find(r => r.data.featured) || reviews[0];
+---
+
+<aside class="space-y-6 lg:sticky lg:top-24" aria-label="Sidebar with contact form and customer review">
+  <!-- Contact Form Card -->
+  <div class="card-hover">
+    <h3 class="text-lg font-bold text-foreground mb-1">Request a Free Quote</h3>
+    <p class="text-sm text-muted-foreground mb-4">Get a personalized estimate for your project.</p>
+
+    <!-- Netlify: hidden form for static site detection -->
+    <form name="sidebar-contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <textarea name="message"></textarea>
+    </form>
+
+    <form name="sidebar-contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="space-y-4" aria-label="Quick quote request form" id="sidebar-form">
+      <!-- Netlify: form-name is required for AJAX submissions -->
+      <input type="hidden" name="form-name" value="sidebar-contact" />
+      <!-- Honeypot -->
+      <p class="hidden" aria-hidden="true">
+        <label>Don't fill this out: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+      </p>
+      <div>
+        <label for="sidebar-name" class="block text-sm font-medium text-foreground mb-1.5">Your Name <span class="text-error" aria-hidden="true">*</span></label>
+        <input
+          type="text"
+          id="sidebar-name"
+          name="name"
+          required
+          placeholder="John Doe"
+          autocomplete="name"
+          class="w-full px-3 py-2.5 text-sm border border-border rounded-lg bg-background focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary transition-colors"
+        />
+      </div>
+      <div>
+        <label for="sidebar-email" class="block text-sm font-medium text-foreground mb-1.5">Email Address <span class="text-error" aria-hidden="true">*</span></label>
+        <input
+          type="email"
+          id="sidebar-email"
+          name="email"
+          required
+          placeholder="your@email.com"
+          autocomplete="email"
+          class="w-full px-3 py-2.5 text-sm border border-border rounded-lg bg-background focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary transition-colors"
+        />
+      </div>
+      <div>
+        <label for="sidebar-message" class="block text-sm font-medium text-foreground mb-1.5">Project Description</label>
+        <textarea
+          id="sidebar-message"
+          name="message"
+          rows={3}
+          placeholder="Describe your project briefly..."
+          class="w-full px-3 py-2.5 text-sm border border-border rounded-lg bg-background focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary transition-colors resize-none"
+        ></textarea>
+      </div>
+      <button type="submit" class="cta-primary w-full justify-center">
+        Send quote request
+      </button>
+    </form>
+    <!-- Success state (hidden until submission) -->
+    <div id="sidebar-success" class="hidden text-center py-4" role="status" aria-live="polite">
+      <p class="text-sm font-semibold text-accent mb-1">Request sent!</p>
+      <p class="text-xs text-muted-foreground">We'll get back to you within 24 hours.</p>
+    </div>
+
+    <p class="text-xs text-muted-foreground mt-3 text-center">
+      Or call us directly at <a href={`tel:${siteConfig.phone}`} class="text-primary font-semibold hover:underline">{siteConfig.phone}</a>
+    </p>
+  </div>
+
+  <script>
+    const sidebarForm = document.getElementById('sidebar-form') as HTMLFormElement | null;
+    const sidebarSuccess = document.getElementById('sidebar-success');
+
+    sidebarForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const body = new URLSearchParams(new FormData(sidebarForm) as any).toString();
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body,
+      }).catch(() => {});
+
+      // Show inline success after brief spinner feel
+      setTimeout(() => {
+        sidebarForm.classList.add('hidden');
+        sidebarSuccess?.classList.remove('hidden');
+      }, 800);
+    });
+  </script>
+
+  <!-- Review Card -->
+  {featuredReview && (
+    <div class="card-hover">
+      <div class="flex gap-0.5 mb-3" role="img" aria-label={`${featuredReview.data.rating} out of 5 stars`}>
+        {Array.from({ length: 5 }).map((_, i) => (
+          <svg
+            class={`w-4 h-4 ${i < featuredReview.data.rating ? 'text-secondary fill-current' : 'text-muted fill-current'}`}
+            viewBox="0 0 20 20"
+            aria-hidden="true"
+          >
+            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+          </svg>
+        ))}
+      </div>
+      <blockquote>
+        <p class="text-sm text-muted-foreground italic leading-relaxed mb-4">
+          "{featuredReview.data.review}"
+        </p>
+      </blockquote>
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-sm font-bold text-primary" aria-hidden="true">
+          {featuredReview.data.name.charAt(0)}
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-foreground">{featuredReview.data.name}</p>
+          <p class="text-xs text-muted-foreground">{featuredReview.data.service}</p>
+        </div>
+      </div>
+    </div>
+  )}
+</aside>

@@ -1,0 +1,64 @@
+---
+import { getCollection } from 'astro:content';
+import BeforeAfterSlider from '@/components/custom/BeforeAfterSlider.astro';
+
+const projects = await getCollection('projects');
+const featuredProject = projects.find(p => p.data.featured) || projects[0];
+---
+
+{featuredProject && (
+<!-- CUSTOMIZE: Interactive before/after showcase for homepage -->
+<section class="py-24 bg-(--background-light)" aria-labelledby="work-heading">
+  <div class="section-container">
+    <!-- Section Header -->
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12 reveal">
+      <div>
+        <h2 id="work-heading" class="section-heading">Our Work</h2>
+        <p class="section-subheading max-w-lg">Drag the slider to reveal the transformation. Real projects, real results.</p>
+      </div>
+      <a
+        href="/projects"
+        class="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-accent transition-colors"
+      >
+        Browse all completed projects
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+        </svg>
+      </a>
+    </div>
+
+    <!-- Interactive Slider -->
+    <div class="reveal">
+      <div class="max-w-4xl mx-auto">
+        <BeforeAfterSlider
+          beforeImage={featuredProject.data.beforeImage}
+          afterImage={featuredProject.data.afterImage}
+          alt={featuredProject.data.title}
+          beforeLabel="Before"
+          afterLabel="After"
+        />
+      </div>
+
+      <!-- Project Info -->
+      <div class="max-w-4xl mx-auto mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h3 class="text-lg font-bold text-foreground">{featuredProject.data.title}</h3>
+          <p class="text-sm text-muted-foreground">
+            {featuredProject.data.serviceType}
+            {featuredProject.data.location && ` \u2022 ${featuredProject.data.location}`}
+          </p>
+        </div>
+        <a
+          href={`/projects/${featuredProject.slug}`}
+          class="cta-outline"
+        >
+          View full project details
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+)}

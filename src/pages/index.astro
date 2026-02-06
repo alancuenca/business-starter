@@ -1,0 +1,56 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import StickyHeader from '@/components/custom/StickyHeader.astro';
+import Hero from '@/components/sections/Hero.astro';
+import ServiceGrid from '@/components/sections/ServiceGrid.astro';
+import ProjectShowcase from '@/components/sections/ProjectShowcase.astro';
+import Testimonials from '@/components/sections/Testimonials.astro';
+import ContactForm from '@/components/custom/ContactForm.astro';
+import { siteConfig } from '@/site.config';
+---
+
+<BaseLayout>
+  <StickyHeader />
+  <main id="main-content">
+    <Hero />
+    <ServiceGrid />
+    <ProjectShowcase />
+    <Testimonials />
+
+    <!-- Contact Section -->
+    <section id="contact-form" class="py-24" aria-labelledby="contact-heading">
+      <div class="section-container">
+        <div class="text-center mb-12 reveal">
+          <h2 id="contact-heading" class="section-heading">Get Your Free Quote</h2>
+          <p class="section-subheading">
+            Tell us about your project and receive a personalized estimate within 24 hours
+          </p>
+        </div>
+        <div class="reveal">
+          <ContactForm />
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <section class="py-24 bg-foreground text-background" aria-labelledby="emergency-heading">
+      <div class="section-container text-center reveal">
+        <h2 id="emergency-heading" class="text-3xl md:text-4xl font-black tracking-tight mb-4">
+          Need Emergency Service?
+        </h2>
+        <p class="text-lg text-background/70 mb-8 max-w-lg mx-auto">
+          Our licensed technicians are available 24/7 for urgent repairs. Call now for immediate assistance.
+        </p>
+        <a
+          href={`tel:${siteConfig.phone}`}
+          class="inline-flex items-center justify-center gap-2 bg-primary text-white px-8 py-4 rounded-lg text-lg font-bold hover:bg-primary-accent active:scale-[0.98] transition-all duration-150"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+          </svg>
+          Call us at {siteConfig.phone}
+        </a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

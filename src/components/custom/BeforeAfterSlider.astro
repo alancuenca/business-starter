@@ -1,0 +1,159 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  beforeImage: ImageMetadata;
+  afterImage: ImageMetadata;
+  beforeLabel?: string;
+  afterLabel?: string;
+  alt: string;
+}
+
+const {
+  beforeImage,
+  afterImage,
+  beforeLabel = 'Before',
+  afterLabel = 'After',
+  alt,
+} = Astro.props;
+---
+
+<div class="before-after-slider" data-slider role="group" aria-label={`Before and after comparison: ${alt}`}>
+  <div class="slider-container relative overflow-hidden rounded-2xl shadow-xl" style="--slider-position: 50%;">
+    <!-- After Image (Base Layer) -->
+    <div class="w-full">
+      <Image
+        src={afterImage}
+        alt={`After renovation: ${alt}`}
+        class="w-full h-auto block"
+        width={800}
+        height={600}
+        loading="lazy"
+      />
+    </div>
+
+    <!-- Before Image (Clipped Layer) -->
+    <div
+      class="absolute inset-0 overflow-hidden"
+      style="clip-path: inset(0 calc(100% - var(--slider-position)) 0 0);"
+      data-before-container
+    >
+      <Image
+        src={beforeImage}
+        alt={`Before renovation: ${alt}`}
+        class="w-full h-auto block"
+        width={800}
+        height={600}
+        loading="lazy"
+      />
+    </div>
+
+    <!-- Slider Divider Line -->
+    <div
+      class="slider-line absolute inset-y-0 w-0.5 bg-white/90 pointer-events-none"
+      style="left: var(--slider-position);"
+      aria-hidden="true"
+    >
+      <!-- Handle -->
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11 h-11 bg-white rounded-full shadow-xl flex items-center justify-center border-2 border-white/80 pointer-events-none">
+        <svg class="w-5 h-5 text-foreground" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Labels -->
+    <div class="absolute top-4 left-4 z-10 pointer-events-none" aria-hidden="true">
+      <span class="inline-flex items-center bg-black/60 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full uppercase tracking-wider">
+        {beforeLabel}
+      </span>
+    </div>
+    <div class="absolute top-4 right-4 z-10 pointer-events-none" aria-hidden="true">
+      <span class="inline-flex items-center bg-primary/90 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full uppercase tracking-wider">
+        {afterLabel}
+      </span>
+    </div>
+  </div>
+
+  <!-- Range Input (accessible, covers entire slider) -->
+  <input
+    type="range"
+    min="0"
+    max="100"
+    value="50"
+    class="slider-input absolute inset-0 w-full h-full opacity-0 cursor-ew-resize"
+    aria-label={`Slide to compare before and after: ${alt}. Currently showing 50% before.`}
+    aria-valuemin={0}
+    aria-valuemax={100}
+    aria-valuenow={50}
+    aria-valuetext="50% before, 50% after"
+    data-slider-input
+  />
+</div>
+
+<style>
+  .before-after-slider {
+    position: relative;
+    user-select: none;
+    touch-action: pan-y;
+  }
+
+  .slider-input {
+    z-index: 10;
+  }
+
+  .slider-input::-webkit-slider-thumb {
+    appearance: none;
+    width: 44px;
+    height: 100%;
+    cursor: ew-resize;
+  }
+
+  .slider-input::-moz-range-thumb {
+    appearance: none;
+    width: 44px;
+    height: 100%;
+    cursor: ew-resize;
+    border: none;
+    background: transparent;
+  }
+
+  /* Focus ring on the slider container when keyboard-navigating */
+  .slider-input:focus-visible ~ .slider-container {
+    outline: 2px solid var(--primary);
+    outline-offset: 4px;
+    border-radius: 1rem;
+  }
+</style>
+
+<script>
+  document.querySelectorAll('[data-slider]').forEach((slider) => {
+    const input = slider.querySelector('[data-slider-input]') as HTMLInputElement;
+    const container = slider.querySelector('.slider-container') as HTMLElement;
+
+    if (!input || !container) return;
+
+    const updateSlider = (value: number) => {
+      container.style.setProperty('--slider-position', `${value}%`);
+      input.setAttribute('aria-valuenow', String(value));
+      input.setAttribute('aria-valuetext', `${value}% before, ${100 - value}% after`);
+    };
+
+    input.addEventListener('input', (e) => {
+      updateSlider(Number((e.target as HTMLInputElement).value));
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        const current = Number(input.value);
+        const step = 2;
+        const next = e.key === 'ArrowLeft'
+          ? Math.max(0, current - step)
+          : Math.min(100, current + step);
+        input.value = String(next);
+        updateSlider(next);
+      }
+    });
+  });
+</script>

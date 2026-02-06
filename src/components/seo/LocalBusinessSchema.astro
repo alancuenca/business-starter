@@ -1,0 +1,55 @@
+---
+import { siteConfig } from '@/site.config';
+import { getCollection } from 'astro:content';
+
+// Get reviews for aggregate rating
+const reviews = await getCollection('reviews');
+const featuredReviews = reviews.filter(r => r.data.featured);
+const averageRating = featuredReviews.length > 0
+  ? featuredReviews.reduce((sum, r) => sum + r.data.rating, 0) / featuredReviews.length
+  : 5;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: siteConfig.businessName,
+  description: siteConfig.description,
+  image: new URL(siteConfig.seo.defaultImage, siteConfig.seo.siteUrl).toString(),
+  url: siteConfig.seo.siteUrl,
+  telephone: siteConfig.phone,
+  email: siteConfig.email,
+  priceRange: siteConfig.priceRange,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: siteConfig.address.street,
+    addressLocality: siteConfig.address.city,
+    addressRegion: siteConfig.address.state,
+    postalCode: siteConfig.address.zip,
+    addressCountry: siteConfig.address.country,
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: siteConfig.geo.latitude,
+    longitude: siteConfig.geo.longitude,
+  },
+  openingHoursSpecification: {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    opens: '00:00',
+    closes: '23:59',
+  },
+  ...(featuredReviews.length > 0 && {
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: averageRating.toFixed(1),
+      reviewCount: featuredReviews.length,
+    },
+  }),
+  areaServed: siteConfig.serviceAreas.map(area => ({
+    '@type': 'City',
+    name: area,
+  })),
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

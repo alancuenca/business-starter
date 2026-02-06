@@ -1,0 +1,603 @@
+---
+import { Input } from '@/components/starwind/input';
+import { Textarea } from '@/components/starwind/textarea';
+
+const services = [
+  { name: 'Emergency Plumbing', icon: '🔧' },
+  { name: 'Bathroom Renovation', icon: '🚿' },
+  { name: 'Kitchen Remodel', icon: '🍳' },
+  { name: 'Electrical Work', icon: '⚡' },
+  { name: 'General Repairs', icon: '🏠' },
+  { name: 'Other', icon: '📋' },
+];
+
+const isDev = import.meta.env.DEV;
+---
+
+<div class="max-w-2xl mx-auto" id="contact-form-wrapper" data-env={isDev ? 'dev' : 'prod'}>
+  <!-- Netlify: hidden static form for deploy-time detection -->
+  <form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden aria-hidden="true">
+    <input type="text" name="service" />
+    <input type="text" name="name" />
+    <input type="tel" name="phone" />
+    <input type="email" name="email" />
+    <input type="text" name="address" />
+    <textarea name="details"></textarea>
+    <select name="timeline"><option></option></select>
+  </form>
+
+  <!-- Active form -->
+  <form
+    id="contact-form"
+    name="contact"
+    method="POST"
+    data-netlify="true"
+    netlify-honeypot="bot-field"
+    class="space-y-8"
+    aria-label="Request a free quote"
+  >
+    <!-- Netlify: form-name is required for AJAX submissions -->
+    <input type="hidden" name="form-name" value="contact" />
+    <!-- Honeypot -->
+    <p class="hidden" aria-hidden="true">
+      <label>Don't fill this out if you're human: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+    </p>
+
+    <!-- Progress Steps -->
+    <nav class="flex items-center justify-center gap-2 mb-8" aria-label="Form progress">
+      <div class="step-dot active" data-dot="1">
+        <span class="step-dot-num">1</span>
+        <svg class="step-dot-check" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+        </svg>
+      </div>
+      <div class="step-track" aria-hidden="true"><div class="step-fill" data-line="1"></div></div>
+      <div class="step-dot" data-dot="2">
+        <span class="step-dot-num">2</span>
+        <svg class="step-dot-check" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+        </svg>
+      </div>
+      <div class="step-track" aria-hidden="true"><div class="step-fill" data-line="2"></div></div>
+      <div class="step-dot" data-dot="3">
+        <span class="step-dot-num">3</span>
+        <svg class="step-dot-check" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+        </svg>
+      </div>
+    </nav>
+
+    <!-- ===== STEP 1: Service ===== -->
+    <fieldset class="form-step active" data-step="1" aria-label="Step 1: Choose a service">
+      <legend class="text-2xl font-bold mb-2 text-foreground">What service do you need?</legend>
+      <p class="text-sm text-muted-foreground mb-6">Tap a service to continue.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {services.map((service) => (
+          <label class="block cursor-pointer">
+            <input type="radio" name="service" value={service.name} class="peer sr-only" />
+            <div class="svc-card peer-checked:border-primary peer-checked:bg-(--primary)/5 peer-checked:shadow-md peer-focus-visible:ring-2 peer-focus-visible:ring-(--primary)/50 peer-focus-visible:ring-offset-2">
+              <span class="text-xl mr-2.5" aria-hidden="true">{service.icon}</span>
+              <span class="font-medium text-sm">{service.name}</span>
+              <svg class="svc-check peer-checked:opacity-100 peer-checked:scale-100" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+
+    <!-- ===== STEP 2: Contact ===== -->
+    <fieldset class="form-step" data-step="2" aria-label="Step 2: Contact information">
+      <legend class="text-2xl font-bold mb-2 text-foreground">Your contact information</legend>
+      <p class="text-sm text-muted-foreground mb-6">We'll use this to send your personalized quote.</p>
+      <div class="space-y-4">
+        <div>
+          <label for="cf-name" class="block text-sm font-medium mb-2">Full Name <span class="text-error" aria-hidden="true">*</span></label>
+          <Input type="text" id="cf-name" name="name" required placeholder="John Doe" autocomplete="name" />
+        </div>
+        <div>
+          <label for="cf-phone" class="block text-sm font-medium mb-2">Phone Number <span class="text-error" aria-hidden="true">*</span></label>
+          <Input type="tel" id="cf-phone" name="phone" required placeholder="(555) 123-4567" autocomplete="tel" />
+        </div>
+        <div>
+          <label for="cf-email" class="block text-sm font-medium mb-2">Email Address <span class="text-error" aria-hidden="true">*</span></label>
+          <Input type="email" id="cf-email" name="email" required placeholder="john@example.com" autocomplete="email" />
+        </div>
+      </div>
+    <div class="mt-8 flex justify-between">
+        <button type="button" data-prev class="form-back">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
+          Back
+        </button>
+        <button type="button" data-next class="form-next">
+          Continue
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+        </button>
+      </div>
+    <div id="form-error" class="hidden mt-4 rounded-lg border border-error/30 bg-error/5 px-4 py-3 text-sm text-error">
+      We couldn't submit your request yet. Please try again once the form is connected.
+    </div>
+    </fieldset>
+
+    <!-- ===== STEP 3: Details ===== -->
+    <fieldset class="form-step" data-step="3" aria-label="Step 3: Project details">
+      <legend class="text-2xl font-bold mb-2 text-foreground">Tell us about your project</legend>
+      <p class="text-sm text-muted-foreground mb-6">The more detail you share, the more accurate your quote.</p>
+      <div class="space-y-4">
+        <div>
+          <label for="cf-address" class="block text-sm font-medium mb-2">Service Address</label>
+          <Input type="text" id="cf-address" name="address" placeholder="123 Main St, City, State" autocomplete="street-address" />
+        </div>
+        <div>
+          <label for="cf-details" class="block text-sm font-medium mb-2">Project Details <span class="text-error" aria-hidden="true">*</span></label>
+          <Textarea id="cf-details" name="details" required rows={4} placeholder="Describe your project and any specific requirements..." />
+        </div>
+        <div>
+          <label for="cf-timeline" class="block text-sm font-medium mb-2">Preferred Timeline</label>
+          <select id="cf-timeline" name="timeline" class="w-full px-3 py-2.5 border border-input rounded-lg bg-background text-sm focus-visible:ring-2 focus-visible:ring-primary/50">
+            <option value="">Select a timeline</option>
+            <option value="emergency">Emergency (ASAP)</option>
+            <option value="1-3days">1–3 Days</option>
+            <option value="1week">Within 1 Week</option>
+            <option value="2weeks">Within 2 Weeks</option>
+            <option value="flexible">Flexible</option>
+          </select>
+        </div>
+      </div>
+      <div class="mt-8 flex justify-between">
+        <button type="button" data-prev class="form-back">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
+          Back
+        </button>
+        <button type="submit" id="submit-btn" class="form-submit">
+          <span id="submit-label">Submit free quote request</span>
+          <svg id="submit-spinner" class="submit-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </button>
+      </div>
+    </fieldset>
+  </form>
+
+  <!-- ===== SUCCESS STATE ===== -->
+  <div id="form-success" class="hidden" role="status" aria-live="polite">
+    <div class="text-center py-16">
+      <div class="success-icon mx-auto mb-6">
+        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+        </svg>
+      </div>
+      <h3 class="text-2xl font-bold text-foreground mb-2">Request Received!</h3>
+      <p class="text-muted-foreground max-w-sm mx-auto mb-8">
+        Thank you! We've received your project details and will send your personalized quote within 24 hours.
+      </p>
+      <button type="button" id="reset-form-btn" class="form-back mx-auto">
+        Submit another request
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ========================
+     Step Visibility
+     ======================== */
+  .form-step {
+    display: none;
+    animation: fadeSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .form-step.active {
+    display: block;
+  }
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ========================
+     Progress Dots
+     ======================== */
+  .step-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: var(--muted-foreground);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+  }
+  .step-dot.active {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 0 0 3px var(--background), 0 0 0 5px var(--primary);
+    transform: scale(1.1);
+  }
+  .step-dot.completed {
+    background: var(--accent);
+    color: white;
+  }
+  .step-dot-num {
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .step-dot.completed .step-dot-num {
+    opacity: 0;
+    transform: scale(0);
+    position: absolute;
+  }
+  .step-dot-check {
+    width: 16px;
+    height: 16px;
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity 0.2s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: absolute;
+  }
+  .step-dot.completed .step-dot-check {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* ========================
+     Progress Line
+     ======================== */
+  .step-track {
+    width: 56px;
+    height: 2px;
+    background: var(--muted);
+    border-radius: 1px;
+    overflow: hidden;
+  }
+  .step-fill {
+    width: 0%;
+    height: 100%;
+    background: var(--accent);
+    border-radius: 1px;
+    transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .step-fill.filled {
+    width: 100%;
+  }
+
+  /* ========================
+     Service Cards
+     ======================== */
+  .svc-card {
+    display: flex;
+    align-items: center;
+    padding: 0.875rem 1rem;
+    border-radius: 0.75rem;
+    border: 2px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+    position: relative;
+  }
+  .svc-card:hover {
+    border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .svc-card.pulse {
+    animation: cardPulse 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes cardPulse {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.03); }
+    100% { transform: scale(1); }
+  }
+  .svc-check {
+    width: 20px;
+    height: 20px;
+    color: var(--primary);
+    margin-left: auto;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* ========================
+     Form Buttons
+     ======================== */
+  .form-next,
+  .form-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    padding: 0.75rem 1.75rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: none;
+  }
+  .form-next:hover,
+  .form-submit:hover {
+    background: var(--primary-accent);
+  }
+  .form-next:active,
+  .form-submit:active {
+    transform: scale(0.97);
+  }
+  .form-next:focus-visible,
+  .form-submit:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  .form-back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: var(--muted-foreground);
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: none;
+    background: transparent;
+  }
+  .form-back:hover {
+    color: var(--foreground);
+    background: var(--muted);
+  }
+  .form-back:active {
+    transform: scale(0.97);
+  }
+  .form-back:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  /* ========================
+     Submit Spinner
+     ======================== */
+  .submit-spin {
+    width: 18px;
+    height: 18px;
+    display: none;
+    animation: spin 0.7s linear infinite;
+  }
+  .form-submit.loading #submit-label {
+    display: none;
+  }
+  .form-submit.loading .submit-spin {
+    display: block;
+  }
+  .form-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  .form-submit:disabled:active {
+    transform: none;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ========================
+     Success Checkmark
+     ======================== */
+  .success-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: successPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+  @keyframes successPop {
+    0%   { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+</style>
+
+<script>
+  // Use querySelector to guarantee an HTMLFormElement return type
+  const form = document.querySelector<HTMLFormElement>('form#contact-form');
+  const wrapper = document.getElementById('contact-form-wrapper');
+  const successEl = document.getElementById('form-success');
+  const errorEl = document.getElementById('form-error');
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+  const resetBtn = document.getElementById('reset-form-btn');
+
+  if (form && wrapper) {
+    const steps = form.querySelectorAll<HTMLElement>('.form-step');
+    const dots = form.querySelectorAll<HTMLElement>('.step-dot');
+    const lines = form.querySelectorAll<HTMLElement>('.step-fill');
+    let current = 1;
+
+    /* ---------- Navigate to step ---------- */
+    function goTo(step: number) {
+      steps.forEach((el, i) => el.classList.toggle('active', i + 1 === step));
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i + 1 === step);
+        dot.classList.toggle('completed', i + 1 < step);
+      });
+      lines.forEach((line, i) => line.classList.toggle('filled', i + 1 < step));
+      current = step;
+
+      requestAnimationFrame(() => {
+        const active = form?.querySelector<HTMLElement>(`.form-step[data-step="${step}"]`);
+        const target = active?.querySelector<HTMLElement>(
+          'input:not([type="hidden"]):not([tabindex="-1"]), select, textarea'
+        );
+        target?.focus();
+      });
+    }
+
+    /* ---------- Step 1: auto-advance on selection ---------- */
+    form.querySelectorAll<HTMLInputElement>('input[name="service"]').forEach((radio) => {
+      radio.addEventListener('change', () => {
+        const card = radio.nextElementSibling as HTMLElement;
+        if (!card) return;
+        const check = card.querySelector<HTMLElement>('.svc-check');
+
+        // Pulse animation
+        card.classList.remove('pulse');
+        void card.offsetWidth;
+        card.classList.add('pulse');
+
+        // Clear all selections, then highlight the chosen one
+        form.querySelectorAll<HTMLElement>('.svc-card').forEach((c) => {
+          c.style.borderColor = '';
+          c.style.backgroundColor = '';
+          const ck = c.querySelector<HTMLElement>('.svc-check');
+          if (ck) { ck.style.opacity = '0'; ck.style.transform = 'scale(0)'; }
+        });
+        card.style.borderColor = 'var(--primary)';
+        card.style.backgroundColor = 'color-mix(in srgb, var(--primary) 5%, transparent)';
+        if (check) { check.style.opacity = '1'; check.style.transform = 'scale(1)'; }
+
+        setTimeout(() => goTo(2), 450);
+      });
+    });
+
+    /* ---------- Next / Prev buttons ---------- */
+    form.querySelectorAll<HTMLElement>('[data-next]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const fieldset = form.querySelector<HTMLFieldSetElement>(`.form-step[data-step="${current}"]`);
+        if (!fieldset) return;
+        const required = fieldset.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('[required]');
+        let valid = true;
+        required.forEach((input) => {
+          if (!input.checkValidity()) { input.reportValidity(); valid = false; }
+        });
+        if (valid) goTo(current + 1);
+      });
+    });
+
+    form.querySelectorAll<HTMLElement>('[data-prev]').forEach((btn) => {
+      btn.addEventListener('click', () => goTo(current - 1));
+    });
+
+    const env = wrapper.getAttribute('data-env');
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const shouldErrorInDev = env === 'dev' || isLocal;
+
+    /* ---------- Submit with spinner ---------- */
+    function showSuccess() {
+      form?.classList.add('hidden');
+      successEl?.classList.remove('hidden');
+      errorEl?.classList.add('hidden');
+      sessionStorage.removeItem('contactFormData');
+    }
+
+    function showError() {
+      errorEl?.classList.remove('hidden');
+      if (submitBtn) {
+        submitBtn.classList.remove('loading');
+        submitBtn.disabled = false;
+      }
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // Spinner on
+      if (submitBtn) {
+        submitBtn.classList.add('loading');
+        submitBtn.disabled = true;
+      }
+
+      if (shouldErrorInDev) {
+        setTimeout(showError, 1200);
+        return;
+      }
+
+      // Fire-and-forget the Netlify POST (with min spinner)
+      try {
+        const fd = new FormData(form);
+        const body = new URLSearchParams(fd as any).toString();
+        Promise.all([
+          fetch('/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body,
+          }),
+          new Promise((resolve) => setTimeout(resolve, 1200)),
+        ]).then(([res]) => {
+          if (res && (res as Response).ok) {
+            showSuccess();
+          } else {
+            showError();
+          }
+        }).catch(showError);
+      } catch {
+        showError();
+      }
+    });
+
+    /* ---------- Reset from success ---------- */
+    resetBtn?.addEventListener('click', () => {
+      form.reset();
+      form.classList.remove('hidden');
+      successEl?.classList.add('hidden');
+      errorEl?.classList.add('hidden');
+      if (submitBtn) {
+        submitBtn.classList.remove('loading');
+        submitBtn.disabled = false;
+      }
+
+      form.querySelectorAll<HTMLElement>('.svc-card').forEach((c) => {
+        c.style.borderColor = '';
+        c.style.backgroundColor = '';
+        const ck = c.querySelector<HTMLElement>('.svc-check');
+        if (ck) { ck.style.opacity = '0'; ck.style.transform = 'scale(0)'; }
+      });
+
+      goTo(1);
+    });
+
+    /* ---------- Persist form state ---------- */
+    function save() {
+      try {
+        const fd = new FormData(form as HTMLFormElement);
+        const obj: Record<string, string> = {};
+        fd.forEach((v, k) => { if (k !== 'bot-field') obj[k] = v.toString(); });
+        sessionStorage.setItem('contactFormData', JSON.stringify(obj));
+      } catch {
+        // Silently ignore — persistence is a nicety, not critical
+      }
+    }
+
+    function loadSaved() {
+      try {
+        const raw = sessionStorage.getItem('contactFormData');
+        if (!raw) return;
+        const saved = JSON.parse(raw) as Record<string, string>;
+        Object.entries(saved).forEach(([key, val]) => {
+          if (key === 'bot-field') return;
+          const el = form?.querySelector<HTMLInputElement>(`[name="${key}"]`);
+          if (!el) return;
+          if (el.type === 'radio') {
+            const match = form?.querySelector<HTMLInputElement>(`[name="${key}"][value="${val}"]`);
+            if (match) match.checked = true;
+          } else {
+            el.value = val;
+          }
+        });
+      } catch { /* ignore corrupt storage */ }
+    }
+
+    form.querySelectorAll('input, textarea, select').forEach((el) => {
+      el.addEventListener('change', save);
+      el.addEventListener('input', save);
+    });
+
+    loadSaved();
+  }
+</script>

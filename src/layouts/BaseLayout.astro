@@ -1,0 +1,64 @@
+---
+import '@fontsource/work-sans/400.css';
+import '@fontsource/work-sans/500.css';
+import '@fontsource/work-sans/700.css';
+import '@fontsource/work-sans/900.css';
+import '@/styles/starwind.css';
+import SEOHead from '@/components/seo/SEOHead.astro';
+import LocalBusinessSchema from '@/components/seo/LocalBusinessSchema.astro';
+import Footer from '@/components/custom/Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  article?: boolean;
+  noindex?: boolean;
+}
+
+const { title, description, image, article, noindex } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="js">
+  <head>
+    <SEOHead
+      title={title}
+      description={description}
+      image={image}
+      article={article}
+      noindex={noindex}
+    />
+    <LocalBusinessSchema />
+  </head>
+  <body class="flex min-h-screen flex-col">
+    <!-- Skip Navigation for keyboard/screen reader users -->
+    <a href="#main-content" class="skip-nav">
+      Skip to main content
+    </a>
+
+    <slot />
+    <Footer />
+
+    <!-- Reveal animation observer -- tiny, non-blocking -->
+    <script>
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+        );
+        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+      } else {
+        // Fallback: show all immediately
+        document.querySelectorAll('.reveal').forEach((el) => el.classList.add('revealed'));
+      }
+    </script>
+  </body>
+</html>

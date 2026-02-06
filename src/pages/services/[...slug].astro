@@ -1,0 +1,134 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import StickyHeader from '@/components/custom/StickyHeader.astro';
+import Breadcrumbs from '@/components/custom/Breadcrumbs.astro';
+import { siteConfig } from '@/site.config';
+
+export async function getStaticPaths() {
+  const services = await getCollection('services');
+  return services.map(service => ({
+    params: { slug: service.slug },
+    props: { service },
+  }));
+}
+
+interface Props {
+  service: CollectionEntry<'services'>;
+}
+
+const { service } = Astro.props;
+const { Content } = await service.render();
+---
+
+<BaseLayout
+  title={service.data.title}
+  description={service.data.metaDescription}
+>
+  <StickyHeader />
+  <main id="main-content" class="pt-20">
+    <article class="section-container py-10">
+      <!-- Breadcrumbs -->
+      <Breadcrumbs items={[
+        { label: 'Services', href: '/services' },
+        { label: service.data.title },
+      ]} />
+
+      <!-- Hero Section -->
+      <div class="mb-10 reveal">
+        <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center mb-5" aria-hidden="true">
+          <span class="text-3xl">{service.data.icon}</span>
+        </div>
+        <h1 class="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight text-foreground mb-4">
+          {service.data.title}
+        </h1>
+        <p class="text-lg text-muted-foreground max-w-2xl">
+          {service.data.excerpt}
+        </p>
+        {service.data.pricing && (
+          <p class="text-2xl font-black text-primary mt-4">
+            Starting at ${service.data.pricing.startingAt}
+            {service.data.pricing.unit && <span class="text-base font-medium text-muted-foreground ml-1">{service.data.pricing.unit}</span>}
+          </p>
+        )}
+
+        <div class="flex flex-wrap gap-3 mt-6">
+          <a href={`tel:${siteConfig.phone}`} class="cta-primary">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+            </svg>
+            Call for {service.data.title.toLowerCase()}
+          </a>
+          <a href="/contact" class="cta-outline">
+            Request a free {service.data.title.toLowerCase()} quote
+          </a>
+        </div>
+      </div>
+
+      <!-- Featured Image -->
+      <div class="mb-12 reveal">
+        <Image
+          src={service.data.featuredImage}
+          alt={`Professional ${service.data.title.toLowerCase()} work`}
+          class="w-full rounded-2xl"
+          width={1200}
+          height={600}
+          loading="eager"
+        />
+      </div>
+
+      <!-- Service Content -->
+      <div class="max-w-3xl prose prose-slate prose-headings:font-bold prose-headings:tracking-tight prose-p:text-muted-foreground prose-p:leading-relaxed prose-li:text-muted-foreground reveal">
+        <Content />
+      </div>
+    </article>
+
+    <!-- CTA Section -->
+    <section class="py-24 bg-foreground text-background" aria-labelledby="service-cta-heading">
+      <div class="section-container text-center reveal">
+        <h2 id="service-cta-heading" class="text-3xl md:text-4xl font-black tracking-tight mb-4">
+          Ready to Get Started?
+        </h2>
+        <p class="text-lg text-background/70 mb-8 max-w-lg mx-auto">
+          Contact us today for a free {service.data.title.toLowerCase()} consultation
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+          <a
+            href={`tel:${siteConfig.phone}`}
+            class="cta-primary text-base px-8 py-3.5"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+            </svg>
+            Call us at {siteConfig.phone}
+          </a>
+          <a
+            href="/contact"
+            class="inline-flex items-center justify-center gap-2 bg-white/10 text-white border border-white/20 px-8 py-3.5 rounded-lg font-semibold text-base hover:bg-white/20 active:scale-[0.98] transition-all duration-150"
+          >
+            Request your free quote online
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<script type="application/ld+json" define:vars={{ service: service.data, config: siteConfig }}>
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": service.title,
+  "provider": {
+    "@type": "LocalBusiness",
+    "name": config.businessName,
+    "telephone": config.phone
+  },
+  "areaServed": config.serviceAreas.map(area => ({
+    "@type": "City",
+    "name": area
+  })),
+  "description": service.metaDescription
+}
+</script>

@@ -1,0 +1,104 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import StickyHeader from '@/components/custom/StickyHeader.astro';
+import { siteConfig } from '@/site.config';
+---
+
+<BaseLayout title="About Us">
+  <StickyHeader />
+  <main id="main-content" class="pt-20">
+    <!-- Hero -->
+    <section class="py-16">
+      <div class="section-container text-center reveal">
+        <h1 class="text-4xl md:text-5xl font-black tracking-tight text-foreground mb-4">
+          About {siteConfig.businessName}
+        </h1>
+        <p class="text-lg text-muted-foreground max-w-xl mx-auto">
+          Your trusted partner for quality home services since 2015
+        </p>
+      </div>
+    </section>
+
+    <!-- Story -->
+    <section class="py-16" aria-labelledby="story-heading">
+      <div class="section-container">
+        <div class="max-w-3xl mx-auto prose prose-slate prose-headings:font-bold prose-headings:tracking-tight prose-p:text-muted-foreground prose-p:leading-relaxed prose-li:text-muted-foreground reveal">
+          <h2 id="story-heading">Our Story</h2>
+          <p>
+            {siteConfig.businessName} was founded with a simple mission: provide honest,
+            reliable home repair and renovation services to families in {siteConfig.address.city}
+            and surrounding areas.
+          </p>
+          <p>
+            With over a decade of experience, our team of licensed professionals has completed
+            thousands of projects, from emergency plumbing repairs to complete home renovations.
+            We take pride in our workmanship and stand behind every job we do.
+          </p>
+
+          <h2>Why Choose Us?</h2>
+          <ul>
+            <li><strong>Licensed & Insured</strong> — Fully licensed contractors with comprehensive insurance</li>
+            <li><strong>24/7 Emergency Service</strong> — Available when you need us most</li>
+            <li><strong>Upfront Pricing</strong> — No hidden fees or surprise charges</li>
+            <li><strong>Quality Guarantee</strong> — We stand behind our work with a satisfaction guarantee</li>
+            <li><strong>Local Experts</strong> — Family-owned and operated in {siteConfig.address.city}</li>
+          </ul>
+
+          <h2>Our Service Areas</h2>
+          <p>
+            We proudly serve {siteConfig.serviceAreas.slice(0, -1).join(', ')}, and {siteConfig.serviceAreas.slice(-1)[0]}.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Certifications -->
+    <section class="py-16 bg-(--background-light)" aria-labelledby="certs-heading">
+      <div class="section-container text-center reveal">
+        <h2 id="certs-heading" class="section-heading mb-8">Certifications & Credentials</h2>
+        <div class="flex flex-wrap justify-center gap-3">
+          {siteConfig.certifications.map(cert => (
+            <span class="trust-badge text-sm px-5 py-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {cert}
+            </span>
+          ))}
+          <span class="trust-badge text-sm px-5 py-2.5">
+            License #{siteConfig.licenseNumber}
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-24 bg-foreground text-background" aria-labelledby="about-cta-heading">
+      <div class="section-container text-center reveal">
+        <h2 id="about-cta-heading" class="text-3xl md:text-4xl font-black tracking-tight mb-4">
+          Ready to Work Together?
+        </h2>
+        <p class="text-lg text-background/70 mb-8 max-w-lg mx-auto">
+          Contact us today for a free consultation and personalized estimate
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+          <a
+            href={`tel:${siteConfig.phone}`}
+            class="cta-primary text-base px-8 py-3.5"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+            </svg>
+            Call us at {siteConfig.phone}
+          </a>
+          <a
+            href="/contact"
+            class="inline-flex items-center justify-center gap-2 bg-white/10 text-white border border-white/20 px-8 py-3.5 rounded-lg font-semibold text-base hover:bg-white/20 active:scale-[0.98] transition-all duration-150"
+          >
+            Request a free consultation online
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
