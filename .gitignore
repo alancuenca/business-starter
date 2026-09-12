@@ -13,12 +13,26 @@ yarn-error.log*
 pnpm-debug.log*
 
 
+# pnpm store (belongs in ~/Library/pnpm/store, not project root)
+.pnpm-store/
+
+# lockfiles: keep pnpm-lock.yaml, ignore npm/yarn
+package-lock.json
+yarn.lock
+
 # environment variables
 .env
 .env.production
+
+# Netlify CLI cache
+.netlify/
 
 # macOS-specific files
 .DS_Store
 
 # jetbrains setting folder
 .idea/
+
+# Playwright test output
+playwright-report/
+test-results/
